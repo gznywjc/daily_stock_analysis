@@ -56,6 +56,14 @@ jobs:
           pip install -r requirements.txt
           python -c "import futu; print('✅ futu SDK import OK')"
       
+      - name: 恢复历史分析数据（回测依赖跨 run 的持仓判断记录）
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: dsa-data-${{ github.run_id }}
+          restore-keys: |
+            dsa-data-
+      
       - name: 创建必要目录
         run: |
           mkdir -p data logs reports
@@ -437,6 +445,10 @@ jobs:
           MARKET_REVIEW_ENABLED: ${{ vars.MARKET_REVIEW_ENABLED || secrets.MARKET_REVIEW_ENABLED || 'true' }}
           ANALYSIS_DELAY: ${{ vars.ANALYSIS_DELAY || secrets.ANALYSIS_DELAY || '0' }}
           TRADING_DAY_CHECK_ENABLED: ${{ vars.TRADING_DAY_CHECK_ENABLED || secrets.TRADING_DAY_CHECK_ENABLED || 'true' }}
+          # 回测（评估历史判断准确率，依赖 data/ 持久化）
+          BACKTEST_ENABLED: ${{ vars.BACKTEST_ENABLED || 'true' }}
+          BACKTEST_EVAL_WINDOW_DAYS: ${{ vars.BACKTEST_EVAL_WINDOW_DAYS || '10' }}
+          BACKTEST_MIN_AGE_DAYS: ${{ vars.BACKTEST_MIN_AGE_DAYS || '14' }}
           
           # ==========================================
           # 系统配置
