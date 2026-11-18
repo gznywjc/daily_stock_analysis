@@ -57,7 +57,7 @@ jobs:
           python -c "import futu; print('✅ futu SDK import OK')"
       
       - name: 恢复历史分析数据（回测依赖跨 run 的持仓判断记录）
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data
           key: dsa-data-${{ github.run_id }}
